@@ -56,7 +56,9 @@ class DataGridPaginator extends Nette\Application\UI\Control
 		IContainer $parent = null,
 		$name = null
 	) {
-		parent::__construct($parent, $name);
+		if ($parent) {
+			$parent->addComponent($this, $name);
+		}
 
 		$this->translator = $translator;
 		$this->icon_prefix = $icon_prefix;
@@ -152,7 +154,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 * @param  array
 	 * @return void
 	 */
-	public function loadState(array $params)
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 

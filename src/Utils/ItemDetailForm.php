@@ -30,8 +30,6 @@ final class ItemDetailForm extends Container
 	 */
 	public function __construct(callable $callable_set_container)
 	{
-		parent::__construct();
-
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		$this->callable_set_container = $callable_set_container;
@@ -41,7 +39,7 @@ final class ItemDetailForm extends Container
 	/**
 	 * @param \Nette\ComponentModel\IContainer
 	 */
-	protected function attached($presenter)
+	protected function attached(Nette\ComponentModel\IComponent $presenter): void
 	{
 		parent::attached($presenter);
 
@@ -89,7 +87,7 @@ final class ItemDetailForm extends Container
 	 * @param  string $name
 	 * @return Container
 	 */
-	public function offsetGet($name)
+	public function offsetGet($name): Nette\ComponentModel\IComponent
 	{
 		return $this->getComponent($name);
 	}
@@ -99,7 +97,7 @@ final class ItemDetailForm extends Container
 	 * @param  string $name
 	 * @return Container
 	 */
-	public function getComponent($name, $throw = true)
+	public function getComponent($name, bool $throw = true): ?Nette\ComponentModel\IComponent
 	{
 		$container = $this->addContainer($name);
 

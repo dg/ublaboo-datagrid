@@ -392,8 +392,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
-		parent::__construct();
-
 		if ($parent !== null) {
 			$parent->addComponent($this, $name);
 		}
@@ -434,7 +432,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * {inheritDoc}
 	 * @return void
 	 */
-	public function attached($presenter)
+	public function attached(Nette\ComponentModel\IComponent $presenter): void
 	{
 		parent::attached($presenter);
 
@@ -487,13 +485,10 @@ class DataGrid extends Nette\Application\UI\Control
 		if (!empty($this->redraw_item)) {
 			$items = $this->dataModel->filterRow($this->redraw_item);
 		} else {
-			$items = Nette\Utils\Callback::invokeArgs(
-				[$this->dataModel, 'filterData'],
-				[
-					$this->getPaginator(),
-					$this->createSorting($this->sort, $this->sort_callback),
-					$this->assembleFilters(),
-				]
+			$items = $this->dataModel->filterData(
+				$this->getPaginator(),
+				$this->createSorting($this->sort, $this->sort_callback),
+				$this->assembleFilters()
 			);
 		}
 
@@ -2415,12 +2410,10 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$rows = [];
 
-		$items = Nette\Utils\Callback::invokeArgs(
-			[$this->dataModel, 'filterData'], [
-				null,
-				$this->createSorting($this->sort, $this->sort_callback),
-				$filter,
-			]
+		$items = $this->dataModel->filterData(
+			null,
+			$this->createSorting($this->sort, $this->sort_callback),
+			$filter
 		);
 
 		foreach ($items as $item) {
@@ -3507,23 +3500,6 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $return;
-	}
-
-
-	/**
-	 * @return PresenterComponent
-	 */
-	public function getParent()
-	{
-		$parent = parent::getParent();
-
-		if (!($parent instanceof PresenterComponent)) {
-			throw new DataGridHasToBeAttachedToPresenterComponentException(
-                "DataGrid is attached to: '" . ($parent ? get_class($parent) : 'null') . "', but instance of PresenterComponent is needed."
-			);
-		}
-
-		return $parent;
 	}
 
 

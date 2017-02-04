@@ -193,6 +193,6 @@ class Export
 	 */
 	public function invoke(array $data)
 	{
-		Callback::invokeArgs($this->callback, [$data, $this->grid]);
+		($this->callback)($data, $this->grid);
 	}
 }
